@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trip Planner — Travel Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 80 54">
+            <path d="M8 43 25 22l9 10L49 9l23 34H8Z" />
+            <path d="m25 22 5-7 6 8M49 9l-5 8 8 1" />
+          </svg>
+        </div>
+        <h1>Trip Planner</h1>
+        <p>Plan · Explore · Remember</p>
+      </div>
+
+      <nav class="nav-menu" aria-label="Main navigation">
+        <a class="nav-link active" href="/dashboard.html"><span class="nav-icon">⌂</span>Home</a>
+        <a class="nav-link" href="/my-trips.html"><span class="nav-icon">▣</span>My Trips</a>
+        <a class="nav-link" href="/create-trip.html"><span class="nav-icon plus">＋</span>Create Trip</a>
+        <a class="nav-link" href="/profile.html"><span class="nav-icon">♙</span>Profile</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <div class="mini-mountain">⌁⌁⌁</div>
+        <p>Better<br> Bigger<br> Adventures</p>
+        <span class="doodle-arrow">↗</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb">Your travel space</div>
+        <div class="user-actions">
+          <button class="icon-button" aria-label="Notifications">♧<span class="notification-dot"></span></button>
+          <div class="avatar">A</div>
+          <span class="username">Aryan</span>
+          <span class="chevron">⌄</span>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">MAKE ROOM FOR WONDER</p>
+          <h2>Your Next Adventure<br>Starts Here</h2>
+          <p class="hero-description">Plan your trips, organize your itinerary,<br class="desktop-break"> and make
+            unforgettable memories.</p>
+          <form class="search-bar" id="destinationSearch">
+            <span class="search-symbol">⌕</span>
+            <input id="searchInput" type="search" placeholder="Search destination..." aria-label="Search destination">
+            <button type="submit" aria-label="Search">⌕</button>
+          </form>
+        </div>
+        <div class="hero-shade"></div>
+      </section>
+
+      <div class="content-grid">
+        <section class="destinations-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow green">FIND YOUR NEXT ESCAPE</p>
+              <h2>Popular Destinations</h2>
+            </div>
+            <button class="text-button" id="viewAll">View All <span>→</span></button>
+          </div>
+
+          <div class="destination-grid" id="destinationGrid">
+            <article class="destination-card" data-name="manali himachal pradesh">
+              <div class="destination-photo manali"></div>
+              <div class="destination-info">
+                <h3>Manali</h3>
+                <p class="meta"><span>▣</span> 5 Days <i>·</i> ₹15,000</p>
+                <p class="location"><span>●</span> Himachal Pradesh</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="goa beach">
+              <div class="destination-photo goa"></div>
+              <div class="destination-info">
+                <h3>Goa</h3>
+                <p class="meta"><span>▣</span> 4 Days <i>·</i> ₹12,000</p>
+                <p class="location"><span>●</span> Goa</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="jaipur rajasthan">
+              <div class="destination-photo jaipur"></div>
+              <div class="destination-info">
+                <h3>Jaipur</h3>
+                <p class="meta"><span>▣</span> 3 Days <i>·</i> ₹10,000</p>
+                <p class="location"><span>●</span> Rajasthan</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="kerala backwaters">
+              <div class="destination-photo kerala"></div>
+              <div class="destination-info">
+                <h3>Kerala</h3>
+                <p class="meta"><span>▣</span> 6 Days <i>·</i> ₹18,000</p>
+                <p class="location"><span>●</span> Kerala</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="Shimla himachal pradesh">
+              <div class="destination-photo shimla"></div>
+              <div class="destination-info">
+                <h3>Shimla</h3>
+                <p class="meta"><span>▣</span> 5 Days <i>·</i> ₹15,000</p>
+                <p class="location"><span>●</span> Himachal Pradesh</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="Kasauli himachal pradesh">
+              <div class="destination-photo kasauli"></div>
+              <div class="destination-info">
+                <h3>Kasauli</h3>
+                <p class="meta"><span>▣</span> 5 Days <i>·</i> ₹18,000</p>
+                <p class="location"><span>●</span> Himachal Pradesh</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="Agra Uttar pradesh">
+              <div class="destination-photo agra"></div>
+              <div class="destination-info">
+                <h3>Agra</h3>
+                <p class="meta"><span>▣</span> 4 Days <i>·</i> ₹13,000</p>
+                <p class="location"><span>●</span> Uttar Pradesh</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="Varanasi Uttar pradesh">
+              <div class="destination-photo varanasi"></div>
+              <div class="destination-info">
+                <h3>Varanasi</h3>
+                <p class="meta"><span>▣</span> 4 Days <i>·</i> ₹12,000</p>
+                <p class="location"><span>●</span> Uttar Pradesh</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="Udaipur Rajasthan">
+              <div class="destination-photo udaipur"></div>
+              <div class="destination-info">
+                <h3>Udaipur</h3>
+                <p class="meta"><span>▣</span> 5 Days <i>·</i> ₹14,000</p>
+                <p class="location"><span>●</span> Rajasthan</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="Hampī Karnataka">
+              <div class="destination-photo hampi"></div>
+              <div class="destination-info">
+                <h3>Hampī</h3>
+                <p class="meta"><span>▣</span> 4 Days <i>·</i> ₹11,000</p>
+                <p class="location"><span>●</span> Karnataka</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="Rishikesh Uttarakhand">
+              <div class="destination-photo rishikesh"></div>
+              <div class="destination-info">
+                <h3>Rishikesh</h3>
+                <p class="meta"><span>▣</span> 4 Days <i>·</i> ₹10,000</p>
+                <p class="location"><span>●</span> Uttarakhand</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="Ladakh Jammu and Kashmir">
+              <div class="destination-photo ladakh"></div>
+              <div class="destination-info">
+                <h3>Ladakh</h3>
+                <p class="meta"><span>▣</span> 5 Days <i>·</i> ₹16,000</p>
+                <p class="location"><span>●</span> Jammu and Kashmir</p>
+              </div>
+            </article>
+            <article class="destination-card" data-name="Darjeeling West Bengal">
+              <div class="destination-photo darjeeling"></div>
+              <div class="destination-info">
+                <h3>Darjeeling</h3>
+                <p class="meta"><span>▣</span> 4 Days <i>·</i> ₹12,000</p>
+                <p class="location"><span>●</span> West Bengal</p>
+              </div>
+            </article>
+
+          </div>
+          <p class="empty-state" id="emptyState">No destinations found. Try another search.</p>
+        </section>
+
+        <aside class="right-column">
+          <section class="quick-panel">
+            <h2>Quick Actions</h2>
+            <button class="action-item" data-message="Create Trip">
+              <span class="action-icon">✈</span>
+              <span><strong>Create New Trip</strong><small>Plan your next journey</small></span>
+              <span class="action-arrow">›</span>
+            </button>
+            <button class="action-item" data-message="My Trips">
+              <span class="action-icon">▣</span>
+              <span><strong>View My Trips</strong><small>Check your saved plans</small></span>
+              <span class="action-arrow">›</span>
+            </button>
+            <button class="action-item" data-message="Update Trip">
+              <span class="action-icon">↗</span>
+              <span><strong>Update Trip</strong><small>Modify existing plans</small></span>
+              <span class="action-arrow">›</span>
+            </button>
+            <button class="action-item" data-message="Explore Destinations">
+              <span class="action-icon pin-icon">⌖</span>
+              <span><strong>Explore Destinations</strong><small>Get inspired</small></span>
+              <span class="action-arrow">›</span>
+            </button>
+          </section>
+
+          <section class="upcoming-panel">
+            <div class="upcoming-heading">
+              <h2>Upcoming Trip</h2>
+              <span class="status-dot"></span>
+            </div>
+            <div class="upcoming-trip" id="dashboardUpcomingTrip">
+              <div class="upcoming-photo"></div>
+              <div class="upcoming-details">
+                <h3>Loading trip...</h3>
+                <p>Your next adventure is waiting.</p>
+              </div>
+            </div>
+      </div>
+      </section>
+      </aside>
+  </div>
+  <footer>Made for your next great story <span>✦</span></footer>
+  </main>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script>
+    const TRIPS_STORAGE_KEY = "aryanTravelTrips";
+
+    function renderDashboardUpcomingTrip() {
+      const panel = document.getElementById("dashboardUpcomingTrip");
+
+      if (!panel) return;
+
+      let trips = [];
+
+      try {
+        trips = JSON.parse(
+          localStorage.getItem(TRIPS_STORAGE_KEY) || "[]"
+        );
+      } catch (error) {
+        console.error(error);
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const relevantTrips = trips
+        .map(trip => ({
+          ...trip,
+          start: new Date(trip.startDate + "T00:00:00"),
+          end: new Date(trip.endDate + "T00:00:00")
+        }))
+        .filter(trip => trip.end >= today)
+        .sort((a, b) => a.start - b.start);
+
+      if (relevantTrips.length === 0) {
+        panel.innerHTML = `
+            <div class="upcoming-photo"></div>
+            <div class="upcoming-details">
+                <h3>No upcoming trips</h3>
+                <p>Create a trip and it will appear here.</p>
+                <span class="status-pill">Ready when you are</span>
+            </div>`;
+        const upcomingPhoto = panel.querySelector(".upcoming-photo");
+
+        if (upcomingPhoto && trip.destinationImage) {
+          upcomingPhoto.style.backgroundImage = trip.destinationImage;
+          upcomingPhoto.style.backgroundSize = "cover";
+          upcomingPhoto.style.backgroundPosition = "center";
+        }
+
+        return;
+      }
+
+      const trip = relevantTrips[0];
+
+      const isOngoing =
+        trip.start <= today && trip.end >= today;
+
+      const daysLeft = Math.max(
+        0,
+        Math.ceil((trip.start - today) / 86400000)
+      );
+
+      const dateOptions = {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      };
+
+      const startText = trip.start.toLocaleDateString("en-IN", dateOptions);
+      const endText = trip.end.toLocaleDateString("en-IN", dateOptions);
+
+      const safe = value => String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+
+      panel.innerHTML = `
+        <div class="upcoming-photo"></div>
+
+        <div class="upcoming-details">
+
+            <h3>${safe(trip.tripName)}</h3>
+
+            <p>📍 ${safe(trip.destination)}</p>
+
+            <p>▣ &nbsp;${startText} – ${endText}</p>
+
+            <span class="status-pill">
+                ${isOngoing
+          ? "Ongoing now"
+          : "Upcoming · " + daysLeft + " days left"
+        }
+            </span>
+
+        </div>
+    `;
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      renderDashboardUpcomingTrip
+    );
+    // Save the exact background images used by Popular Destinations
+    function saveDestinationImages() {
+
+      const imageMap = {};
+
+      document.querySelectorAll(".destination-card").forEach(card => {
+
+        const destinationName = card.querySelector("h3")
+          .textContent.trim().toLowerCase();
+
+        const photo = card.querySelector(".destination-photo");
+
+        if (!photo) return;
+
+        const image = getComputedStyle(photo).backgroundImage;
+
+        if (image && image !== "none") {
+          imageMap[destinationName] = image;
+        }
+
+      });
+
+      localStorage.setItem(
+        "aryanDestinationImages",
+        JSON.stringify(imageMap)
+      );
+    }
+
+    saveDestinationImages();
+    // Make popular destination cards clickable
+    document.querySelectorAll(".destination-card").forEach(card => {
+      card.addEventListener("click", function () {
+        const destination = this.querySelector("h3").textContent.trim();
+
+        window.location.href =
+          "create-trip.html?destination=" + encodeURIComponent(destination);
+      });
+    });
+  </script>
+</body>
+
+</html>

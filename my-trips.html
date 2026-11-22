@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Trips - Travel Itinerary Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --forest: #073a31;
+            --forest-deep: #062d28;
+            --green: #08785c;
+            --green-bright: #0b8a68;
+            --ink: #172b3b;
+            --muted: #718091;
+            --line: #e7ece8;
+            --surface: #ffffff;
+            --canvas: #f7f8f5;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: #edf1ed;
+            color: var(--ink);
+            font-family: "Inter", Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================
+           SAME APP SHELL AS PROFILE
+        ========================= */
+
+        .app-shell {
+            width: min(1600px, 100%);
+            min-height: 100vh;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 224px minmax(0, 1fr);
+            background: var(--surface);
+            box-shadow: 0 18px 55px rgba(20, 42, 34, 0.1);
+        }
+
+        /* =========================
+           SHARED SIDEBAR
+        ========================= */
+
+        .sidebar {
+            background: linear-gradient(160deg,
+                    #073a31 0%,
+                    #052c27 75%,
+                    #062720 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 28px 17px 24px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand {
+            text-align: center;
+            padding: 0 4px 34px;
+        }
+
+        .brand-mark {
+            width: 62px;
+            height: 46px;
+            margin: 0 auto 4px;
+        }
+
+        .brand-mark svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #e6fff4;
+            stroke-width: 3.2;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+        }
+
+        .brand h1 {
+            font-size: 21px;
+            letter-spacing: -0.8px;
+            margin: 0;
+            font-weight: 750;
+        }
+
+        .brand p {
+            color: #c0d6ce;
+            font-size: 10px;
+            margin: 8px 0 0;
+            letter-spacing: 0.25px;
+        }
+
+        .nav-menu {
+            display: grid;
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: #e4f1eb;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 160ms ease, transform 160ms ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(2px);
+        }
+
+        .nav-link.active {
+            background: #147c63;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .nav-icon {
+            width: 19px;
+            text-align: center;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .nav-icon.plus {
+            font-size: 23px;
+        }
+
+        .sidebar-note {
+            margin-top: auto;
+            padding: 30px 20px 10px;
+            color: #c4e3d5;
+            position: relative;
+        }
+
+        .mini-mountain {
+            font-size: 30px;
+            letter-spacing: -8px;
+            opacity: .8;
+            transform: rotate(-7deg);
+            margin-bottom: 5px;
+        }
+
+        .sidebar-note p {
+            font-size: 17px;
+            line-height: 1.28;
+            font-style: italic;
+            margin: 0;
+            letter-spacing: -.3px;
+        }
+
+        .doodle-arrow {
+            position: absolute;
+            right: 14px;
+            bottom: 12px;
+            font-size: 30px;
+            transform: rotate(-14deg);
+        }
+
+        /* ================= MAIN CONTENT ================= */
+
+        .main-content {
+            min-width: 0;
+            padding: 0 30px 30px;
+            background: #fff;
+        }
+
+
+        .topbar {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: #92a098;
+            letter-spacing: .2px;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #273b43;
+        }
+
+        .icon-button {
+            border: 0;
+            background: transparent;
+            color: #314a50;
+            font-size: 22px;
+            position: relative;
+            padding: 7px 10px;
+        }
+
+        .notification-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #e17d4c;
+            border: 1px solid white;
+            border-radius: 50%;
+            top: 7px;
+            right: 8px;
+        }
+
+        .avatar {
+            width: 31px;
+            height: 31px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: white;
+            background: var(--forest);
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .username {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .chevron {
+            color: #718078;
+            margin-left: -5px;
+        }
+
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 28px 0 24px;
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            color: #003f35;
+            margin-bottom: 7px;
+        }
+
+        .page-title p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .create-btn {
+            border: none;
+            background: #003f35;
+            color: white;
+            padding: 13px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .create-btn:hover {
+            background: #0d6b5b;
+        }
+
+        /* ================= TRIP FILTER ================= */
+
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-btn {
+            border: 1px solid #d1d5db;
+            background: white;
+            padding: 9px 17px;
+            border-radius: 7px;
+            cursor: pointer;
+            color: #4b5563;
+            font-size: 13px;
+        }
+
+        .filter-btn.active {
+            background: #003f35;
+            color: white;
+            border-color: #003f35;
+        }
+
+        /* ================= TRIPS ================= */
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 17px;
+        }
+
+        .section-title h2 {
+            color: #003f35;
+            font-size: 20px;
+        }
+
+        .trip-count {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .trips-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .trip-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 13px;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+
+        .trip-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .trip-image {
+            height: 150px;
+            background: linear-gradient(135deg, #d9eee9, #b9dcd5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 52px;
+        }
+
+        .trip-content {
+            padding: 20px;
+        }
+
+        .trip-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .trip-header h3 {
+            color: #003f35;
+            font-size: 19px;
+            margin-bottom: 6px;
+        }
+
+        .status {
+            font-size: 11px;
+            padding: 5px 9px;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .status.upcoming {
+            background: #dff4ed;
+            color: #08705c;
+        }
+
+        .status.completed {
+            background: #eeeeee;
+            color: #555555;
+        }
+
+        .trip-location {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .trip-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-label {
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
+        .info-value {
+            color: #374151;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .trip-actions {
+            border-top: 1px solid #eeeeee;
+            padding-top: 15px;
+            display: flex;
+            gap: 9px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 9px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 12px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .view-btn {
+            background: #003f35;
+            color: white;
+            border: 1px solid #003f35;
+        }
+
+        .edit-btn {
+            background: white;
+            color: #003f35;
+            border: 1px solid #003f35;
+        }
+
+        .delete-btn {
+            background: white;
+            color: #b42318;
+            border: 1px solid #efc2bf;
+        }
+
+        .view-btn:hover {
+            background: #0d6b5b;
+        }
+
+        .edit-btn:hover {
+            background: #eef7f5;
+        }
+
+        .delete-btn:hover {
+            background: #fff3f2;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1180px) {
+            .app-shell {
+                grid-template-columns: 195px minmax(0, 1fr);
+            }
+
+            .main-content {
+                padding: 0 22px 25px;
+            }
+        }
+
+        @media (max-width: 950px) {
+            .trips-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .app-shell {
+                display: block;
+            }
+
+            .sidebar {
+                min-height: auto;
+                padding: 12px 15px;
+                flex-direction: row;
+                align-items: center;
+                gap: 18px;
+            }
+
+            .brand {
+                padding: 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                text-align: left;
+                white-space: nowrap;
+            }
+
+            .brand-mark {
+                width: 35px;
+                height: 29px;
+                margin: 0;
+            }
+
+            .brand h1 {
+                font-size: 16px;
+            }
+
+            .brand p,
+            .sidebar-note {
+                display: none;
+            }
+
+            .nav-menu {
+                display: flex;
+                gap: 3px;
+                margin-left: auto;
+            }
+
+            .nav-link {
+                padding: 10px;
+                gap: 6px;
+                font-size: 11px;
+            }
+
+            .nav-icon {
+                font-size: 15px;
+                width: auto;
+            }
+
+            .main-content {
+                padding: 0 18px 20px;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .top-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .create-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .filter-section {
+                overflow-x: auto;
+            }
+
+            .filter-btn {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sidebar">
+
+            <div class="brand">
+
+                <div class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 80 54">
+                        <path d="M8 43 25 22l9 10L49 9l23 34H8Z" />
+                        <path d="m25 22 5-7 6 8M49 9l-5 8 8 1" />
+                    </svg>
+                </div>
+
+                <div>
+                    <h1>Trip Planner</h1>
+                    <p>Plan · Explore · Remember</p>
+                </div>
+
+            </div>
+
+            <nav class="nav-menu" aria-label="Main navigation">
+
+                <a class="nav-link" href="dashboard.html">
+                    <span class="nav-icon">⌂</span>
+                    Home
+                </a>
+
+                <a class="nav-link active" href="/my-trips.html">
+                    <span class="nav-icon">▣</span>
+                    My Trips
+                </a>
+
+                <a class="nav-link" href="/create-trip.html">
+                    <span class="nav-icon plus">＋</span>
+                    Create Trip
+                </a>
+
+                <a class="nav-link" href="profile.html">
+                    <span class="nav-icon">♙</span>
+                    Profile
+                </a>
+
+            </nav>
+
+            <div class="sidebar-note">
+                <div class="mini-mountain">⌁⌁⌁</div>
+                <p>Better<br> Bigger<br> Adventures</p>
+                <span class="doodle-arrow">↗</span>
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN CONTENT ================= -->
+
+        <main class="main-content">
+
+            <div class="top-section">
+
+                <div class="page-title">
+                    <h1>My Trips</h1>
+                    <p>Manage and keep track of all your travel plans.</p>
+                </div>
+
+                <a href="create-trip.html" class="create-btn">
+                    <span>＋</span>
+                    Create New Trip
+                </a>
+
+            </div>
+
+
+            <!-- FILTER -->
+
+            <div class="filter-section">
+
+                <button class="filter-btn active" onclick="filterTrips('all', this)">
+                    All Trips
+                </button>
+
+                <button class="filter-btn" onclick="filterTrips('upcoming', this)">
+                    Upcoming
+                </button>
+
+                <button class="filter-btn" onclick="filterTrips('completed', this)">
+                    Completed
+                </button>
+
+            </div>
+
+
+            <!-- TRIPS -->
+
+            <div class="section-title">
+                <h2>Your Trips</h2>
+                <span class="trip-count" id="tripCount">3 trips</span>
+            </div>
+
+
+            <div class="trips-container" id="tripsContainer">
+
+                <!-- MANALI -->
+
+                <div class="trip-card" data-status="upcoming">
+
+                    <div class="trip-image">
+                        🏔️
+                    </div>
+
+                    <div class="trip-content">
+
+                        <div class="trip-header">
+                            <div>
+                                <h3>Manali Adventure</h3>
+                                <div class="trip-location">
+                                    📍 Manali, Himachal Pradesh
+                                </div>
+                            </div>
+
+                            <span class="status upcoming">
+                                Upcoming
+                            </span>
+                        </div>
+
+                        <div class="trip-info">
+
+                            <div class="info-item">
+                                <span class="info-label">Travel Dates</span>
+                                <span class="info-value">
+                                    10–15 Dec 2026
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Duration</span>
+                                <span class="info-value">
+                                    5 Days
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Budget</span>
+                                <span class="info-value">
+                                    ₹20,000
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Travellers</span>
+                                <span class="info-value">
+                                    2 People
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="trip-actions">
+
+                            <a href="#" class="action-btn view-btn" onclick="viewTrip('Manali Adventure')">
+                                View
+                            </a>
+
+                            <a href="create-trip.html" class="action-btn edit-btn">
+                                Edit
+                            </a>
+
+                            <button class="action-btn delete-btn" onclick="deleteTrip(this)">
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- GOA -->
+
+                <div class="trip-card" data-status="completed">
+
+                    <div class="trip-image">
+                        🏖️
+                    </div>
+
+                    <div class="trip-content">
+
+                        <div class="trip-header">
+
+                            <div>
+                                <h3>Goa Beach Trip</h3>
+
+                                <div class="trip-location">
+                                    📍 Goa, India
+                                </div>
+                            </div>
+
+                            <span class="status completed">
+                                Completed
+                            </span>
+
+                        </div>
+
+                        <div class="trip-info">
+
+                            <div class="info-item">
+                                <span class="info-label">Travel Dates</span>
+                                <span class="info-value">
+                                    05–08 Oct 2026
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Duration</span>
+                                <span class="info-value">
+                                    4 Days
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Budget</span>
+                                <span class="info-value">
+                                    ₹15,000
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Travellers</span>
+                                <span class="info-value">
+                                    3 People
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="trip-actions">
+
+                            <a href="#" class="action-btn view-btn" onclick="viewTrip('Goa Beach Trip')">
+                                View
+                            </a>
+
+                            <a href="create-trip.html" class="action-btn edit-btn">
+                                Edit
+                            </a>
+
+                            <button class="action-btn delete-btn" onclick="deleteTrip(this)">
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- JAIPUR -->
+
+                <div class="trip-card" data-status="completed">
+
+                    <div class="trip-image">
+                        🕌
+                    </div>
+
+                    <div class="trip-content">
+
+                        <div class="trip-header">
+
+                            <div>
+                                <h3>Jaipur Heritage Tour</h3>
+
+                                <div class="trip-location">
+                                    📍 Jaipur, Rajasthan
+                                </div>
+                            </div>
+
+                            <span class="status completed">
+                                Completed
+                            </span>
+
+                        </div>
+
+                        <div class="trip-info">
+
+                            <div class="info-item">
+                                <span class="info-label">Travel Dates</span>
+                                <span class="info-value">
+                                    12–15 Sep 2026
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Duration</span>
+                                <span class="info-value">
+                                    3 Days
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Budget</span>
+                                <span class="info-value">
+                                    ₹12,000
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Travellers</span>
+                                <span class="info-value">
+                                    2 People
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="trip-actions">
+
+                            <a href="#" class="action-btn view-btn" onclick="viewTrip('Jaipur Heritage Tour')">
+                                View
+                            </a>
+
+                            <a href="create-trip.html" class="action-btn edit-btn">
+                                Edit
+                            </a>
+
+                            <button class="action-btn delete-btn" onclick="deleteTrip(this)">
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        const TRIPS_STORAGE_KEY = "aryanTravelTrips";
+        let activeFilter = "all";
+
+        function getSavedTrips() {
+            try {
+                return JSON.parse(localStorage.getItem(TRIPS_STORAGE_KEY) || "[]");
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
+        }
+
+        function getTripStatus(trip) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const start = new Date(trip.startDate + "T00:00:00");
+            const end = new Date(trip.endDate + "T00:00:00");
+
+            if (end < today) return "completed";
+            if (start <= today && end >= today) return "ongoing";
+
+            return "upcoming";
+        }
+
+        function daysUntil(dateString) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const target = new Date(dateString + "T00:00:00");
+
+            return Math.max(0, Math.ceil((target - today) / 86400000));
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString + "T00:00:00").toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "short",
+                year: "numeric"
+            });
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[char]);
+        }
+
+        function filterTrips(status, button) {
+            activeFilter = status;
+
+            document.querySelectorAll(".filter-btn").forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            if (button) {
+                button.classList.add("active");
+            }
+
+            renderTrips();
+        }
+
+        function renderTrips() {
+            const container = document.getElementById("tripsContainer");
+
+            const allTrips = getSavedTrips().map(trip => ({
+                ...trip,
+                status: getTripStatus(trip)
+            }));
+
+            const visibleTrips = allTrips.filter(trip =>
+                activeFilter === "all" || trip.status === activeFilter
+            );
+
+            document.getElementById("tripCount").textContent =
+                visibleTrips.length + (visibleTrips.length === 1 ? " trip" : " trips");
+
+            if (visibleTrips.length === 0) {
+                container.innerHTML = `
+            <p style="grid-column:1/-1;padding:28px;text-align:center;">
+                No trips here yet. Create a new trip to see it here.
+            </p>
+        `;
+                return;
+            }
+
+            visibleTrips.sort((a, b) =>
+                a.startDate.localeCompare(b.startDate)
+            );
+
+            container.innerHTML = visibleTrips.map(trip => {
+                const duration =
+                    Math.floor(
+                        (new Date(trip.endDate + "T00:00:00") -
+                            new Date(trip.startDate + "T00:00:00")) / 86400000
+                    ) + 1;
+
+                const countdown = trip.status === "upcoming"
+                    ? `<div class="info-item">
+                    <span class="info-label">Starts in</span>
+                    <span class="info-value">${daysUntil(trip.startDate)} days</span>
+               </div>`
+                    : "";
+
+                return `
+            <article class="trip-card" data-status="${trip.status}">
+
+                <div class="trip-image"
+                    style="${trip.destinationImage
+                        ? `background-image:${trip.destinationImage}; background-size:cover; background-position:center;`
+                        : ""}">
+                </div>
+
+                <div class="trip-content">
+
+                    <div class="trip-header">
+                        <div>
+                            <h3>${escapeHTML(trip.tripName)}</h3>
+                            <div class="trip-location">
+                                📍 ${escapeHTML(trip.destination)}
+                            </div>
+                        </div>
+
+                        <span class="status ${trip.status === "completed" ? "completed" : "upcoming"
+                    }">
+                            ${trip.status.charAt(0).toUpperCase() + trip.status.slice(1)}
+                        </span>
+                    </div>
+
+                    <div class="trip-info">
+
+                        <div class="info-item">
+                            <span class="info-label">Travel Dates</span>
+                            <span class="info-value">
+                                ${formatDate(trip.startDate)} – ${formatDate(trip.endDate)}
+                            </span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-label">Duration</span>
+                            <span class="info-value">${duration} days</span>
+                        </div>
+
+                        ${countdown}
+
+                        <div class="info-item">
+                            <span class="info-label">Budget</span>
+                            <span class="info-value">
+                                ₹${Number(trip.budget).toLocaleString("en-IN")}
+                            </span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-label">Travellers</span>
+                            <span class="info-value">${trip.travellers} people</span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-label">Trip Type</span>
+                            <span class="info-value">${escapeHTML(trip.tripType)}</span>
+                        </div>
+
+                    </div>
+
+                    ${trip.description
+                        ? `<p>${escapeHTML(trip.description)}</p>`
+                        : ""
+                    }
+
+                    <div class="trip-actions">
+                        <button class="action-btn view-btn"
+                            onclick="viewTrip('${trip.id}')">
+                            View
+                        </button>
+
+                        <button class="action-btn edit-btn"
+                            onclick="editTrip('${trip.id}')">
+                            Edit
+                        </button>
+
+                        <button class="action-btn delete-btn"
+                            onclick="deleteTrip('${trip.id}')">
+                            Delete
+                        </button>
+                    </div>
+
+                </div>
+            </article>
+        `;
+            }).join("");
+        }
+
+        function deleteTrip(id) {
+            const trips = getSavedTrips();
+
+            const trip = trips.find(item => item.id === id);
+
+            if (!trip || !confirm("Delete " + trip.tripName + "?")) {
+                return;
+            }
+
+            const updatedTrips = trips.filter(item => item.id !== id);
+
+            localStorage.setItem(
+                TRIPS_STORAGE_KEY,
+                JSON.stringify(updatedTrips)
+            );
+
+            renderTrips();
+        }
+
+        function editTrip(id) {
+            const trip = getSavedTrips().find(
+                item => String(item.id) === String(id)
+            );
+
+            if (!trip) {
+                alert("Trip not found!");
+                return;
+            }
+
+            window.location.href =
+                `create-trip.html?editTripId=${encodeURIComponent(trip.id)}`;
+        }
+
+        function viewTrip(id) {
+            const trip = getSavedTrips().find(item => String(item.id) === String(id));
+
+            if (!trip) {
+                alert("Trip not found!");
+                return;
+            }
+
+            // Open the itinerary for the selected trip.
+            window.location.href = `itinerary.html?tripId=${encodeURIComponent(trip.id)}`;
+        }
+
+        function editTrip(id) {
+            const trip = getSavedTrips().find(
+                item => String(item.id) === String(id)
+            );
+
+            if (!trip) {
+                alert("Trip not found!");
+                return;
+            }
+
+            window.location.href =
+                `create-trip.html?editTripId=${encodeURIComponent(trip.id)}`;
+        }
+
+        document.addEventListener("DOMContentLoaded", renderTrips);
+
+    </script>
+
+</body>
+
+</html>

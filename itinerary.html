@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Travel Itinerary | Aryan's Website</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .itinerary-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 35px 25px;
+        }
+
+        .itinerary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .itinerary-header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .itinerary-header p {
+            opacity: 0.7;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: transparent;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        /* Trip Overview */
+
+        .trip-overview {
+            background: linear-gradient(120deg, #1769d2, #42a5f5);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .tag {
+            font-size: 12px;
+            letter-spacing: 2px;
+            opacity: 0.8;
+        }
+
+        .trip-info h2 {
+            font-size: 32px;
+            margin: 12px 0;
+        }
+
+        .trip-dates {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .trip-stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.18);
+            padding: 20px;
+            border-radius: 14px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            font-size: 28px;
+        }
+
+        .stat-box p {
+            font-size: 13px;
+        }
+
+        /* Planner */
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-heading h2 {
+            font-size: 24px;
+            margin-bottom: 7px;
+        }
+
+        .section-heading p {
+            opacity: 0.7;
+        }
+
+        .add-btn {
+            background: #1769d2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .add-btn:hover,
+        .save-btn:hover {
+            background: #1055ad;
+        }
+
+        /* Day Navigation */
+
+        .day-navigation {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .day-btn {
+            padding: 13px 22px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background: transparent;
+            cursor: pointer;
+            white-space: nowrap;
+            color: inherit;
+        }
+
+        .day-btn.active {
+            background: #1769d2;
+            color: white;
+            border-color: #1769d2;
+        }
+
+        /* Activity Cards */
+
+        .activity-card {
+            display: flex;
+            gap: 20px;
+            padding: 22px;
+            border: 1px solid #e5e5e5;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            background: var(--card-bg, #fff);
+        }
+
+        .activity-time {
+            min-width: 90px;
+            font-weight: 700;
+            color: #1769d2;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-details h3 {
+            margin-bottom: 8px;
+        }
+
+        .activity-details p {
+            font-size: 14px;
+            margin-bottom: 7px;
+            opacity: 0.75;
+        }
+
+        .activity-actions {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .activity-actions button {
+            padding: 7px 12px;
+            border-radius: 7px;
+            border: 1px solid #ddd;
+            background: transparent;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        .delete-btn:hover {
+            color: #e53935;
+        }
+
+        /* Empty State */
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            border: 1px dashed #ccc;
+            border-radius: 15px;
+        }
+
+        .empty-state p {
+            margin: 12px 0 20px;
+            opacity: 0.7;
+        }
+
+        /* Modal */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .activity-modal {
+            background: var(--card-bg, white);
+            color: var(--text-color, #222);
+            width: 100%;
+            max-width: 480px;
+            padding: 28px;
+            border-radius: 18px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        .activity-modal label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: 600;
+        }
+
+        .activity-modal input,
+        .activity-modal textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 13px;
+            margin-top: 22px;
+            border: none;
+            border-radius: 10px;
+            background: #1769d2;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+
+        @media(max-width: 650px) {
+
+            .itinerary-container {
+                padding: 22px 15px;
+            }
+
+            .itinerary-header h1 {
+                font-size: 23px;
+            }
+
+            .trip-overview {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 25px;
+                padding: 25px;
+            }
+
+            .trip-info h2 {
+                font-size: 25px;
+            }
+
+            .trip-stats {
+                width: 100%;
+            }
+
+            .stat-box {
+                flex: 1;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+
+            .activity-card {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .activity-actions {
+                margin-top: 10px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="itinerary-container">
+
+        <!-- Header -->
+
+        <header class="itinerary-header">
+
+            <div>
+                <h1>My Travel Itinerary</h1>
+                <p>Plan your journey, one day at a time.</p>
+            </div>
+
+            <button class="back-btn" onclick="history.back()">
+                ← Back
+            </button>
+
+        </header>
+
+
+        <!-- Trip Overview -->
+
+        <section class="trip-overview">
+
+            <div class="trip-info">
+
+                <span class="tag">YOUR JOURNEY</span>
+
+                <h2 id="tripName">Manali Adventure</h2>
+
+                <p id="tripDestination">
+                    📍 Manali, Himachal Pradesh
+                </p>
+
+                <div class="trip-dates" id="tripDates">
+                    15 Dec - 19 Dec 2026
+                </div>
+
+            </div>
+
+            <div class="trip-stats">
+
+                <div class="stat-box">
+                    <h3 id="totalDays">5</h3>
+                    <p>Days</p>
+                </div>
+
+                <div class="stat-box">
+                    <h3 id="totalActivities">0</h3>
+                    <p>Activities</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Daily Planner -->
+
+        <section class="planner-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Daily Itinerary</h2>
+                    <p>Organize your activities for each day.</p>
+                </div>
+
+                <button class="add-btn" onclick="openActivityModal()">
+                    + Add Activity
+                </button>
+
+            </div>
+
+
+            <!-- Day Navigation -->
+
+            <div class="day-navigation" id="dayNavigation">
+            </div>
+
+
+            <!-- Activities Container -->
+
+            <div id="activitiesContainer">
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- Add Activity Modal -->
+
+    <div class="modal-overlay" id="activityModal">
+
+        <div class="activity-modal">
+
+            <div class="modal-header">
+
+                <h2 id="modalTitle">Add Activity</h2>
+
+                <button class="close-btn" onclick="closeActivityModal()">
+                    &times;
+                </button>
+
+            </div>
+
+
+            <form id="activityForm">
+
+                <label>Activity Name</label>
+
+                <input type="text" id="activityName" placeholder="e.g. Visit Solang Valley" required>
+
+
+                <label>Date</label>
+
+                <input type="date" id="activityDate" required>
+
+
+                <label>Time</label>
+
+                <input type="time" id="activityTime" required>
+
+
+                <label>Location</label>
+
+                <input type="text" id="activityLocation" placeholder="Enter location" required>
+
+
+                <label>Description</label>
+
+                <textarea id="activityDescription" placeholder="Describe your activity..." rows="3"></textarea>
+
+
+                <button type="submit" class="save-btn">
+                    Save Activity
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- JavaScript -->
+
+    <script>
+
+        // Trip Configuration
+
+        const params = new URLSearchParams(window.location.search);
+
+        const tripId = params.get("tripId");
+
+        const allTrips = JSON.parse(
+            localStorage.getItem("aryanTravelTrips") || "[]"
+        );
+
+        const currentTrip = allTrips.find(
+            trip => String(trip.id) === String(tripId)
+        );
+
+        if (!currentTrip) {
+            alert("Trip not found!");
+            window.location.href = "my-trips.html";
+        }
+
+        const tripName = currentTrip.tripName;
+        const destination = currentTrip.destination;
+
+        function parseLocalDate(dateString) {
+            const [year, month, day] = dateString.split("-").map(Number);
+            return new Date(year, month - 1, day);
+        }
+
+        const tripStartDate = parseLocalDate(currentTrip.startDate);
+        const tripEndDate = parseLocalDate(currentTrip.endDate);
+
+        const storageKey = `itinerary_${tripId}`;
+
+        // const tripStartDate = new Date(2026, 11, 15);
+
+        // const tripEndDate = new Date(2026, 11, 19);
+
+
+        // Local Storage
+
+        //const storageKey = `itinerary_${tripId}`;
+
+        let activities = JSON.parse(
+            localStorage.getItem(storageKey) || "[]"
+        );
+
+        let selectedDay = null;
+
+        let editingActivityId = null;
+
+
+        // Initialize Itinerary
+
+        function initializeItinerary() {
+
+            const totalDays = Math.max(
+                1,
+                Math.floor(
+                    (tripEndDate - tripStartDate) / 86400000
+                ) + 1
+            );
+
+            document.getElementById("tripName").textContent =
+                tripName;
+
+            document.getElementById("tripDestination").textContent =
+                "📍 " + destination;
+
+            document.getElementById("totalDays").textContent =
+                totalDays;
+
+            document.getElementById("tripDates").textContent =
+                `${formatDate(tripStartDate)} - ${formatDate(tripEndDate)}`;
+
+            generateDays(totalDays);
+
+            renderActivities();
+
+        }
+
+
+        // Format Date
+
+        function formatDate(date) {
+
+            return date.toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "short",
+                year: "numeric"
+            });
+
+        }
+
+
+        // Get Local Date String
+
+        function getLocalDateString(date) {
+
+            const year = date.getFullYear();
+
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+
+            const day = String(date.getDate()).padStart(2, "0");
+
+            return `${year}-${month}-${day}`;
+
+        }
+
+
+        // Generate Days
+
+        function generateDays(totalDays) {
+
+            const navigation =
+                document.getElementById("dayNavigation");
+
+            navigation.innerHTML = "";
+
+            for (let i = 0; i < totalDays; i++) {
+
+                const date = new Date(tripStartDate);
+
+                date.setDate(date.getDate() + i);
+
+                const dateString = getLocalDateString(date);
+
+                const button = document.createElement("button");
+
+                button.className = "day-btn";
+
+                button.textContent =
+                    `Day ${i + 1} · ${date.toLocaleDateString("en-IN", {
+                        day: "numeric",
+                        month: "short"
+                    })}`;
+
+                button.onclick = () => {
+                    selectDay(dateString, button);
+                };
+
+                navigation.appendChild(button);
+
+                if (i === 0) {
+
+                    selectDay(dateString, button);
+
+                }
+
+            }
+
+        }
+
+
+        // Select Day
+
+        function selectDay(date, button) {
+
+            selectedDay = date;
+
+            document.querySelectorAll(".day-btn").forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            button.classList.add("active");
+
+            renderActivities();
+
+        }
+
+
+        // Open Activity Modal
+
+        function openActivityModal(id = null) {
+
+            editingActivityId = id;
+
+            const form =
+                document.getElementById("activityForm");
+
+            form.reset();
+
+            document.getElementById("modalTitle").textContent =
+                id !== null ? "Edit Activity" : "Add Activity";
+
+            if (id !== null) {
+
+                const activity = activities.find(
+                    item => item.id === id
+                );
+
+                if (!activity) return;
+
+                document.getElementById("activityName").value =
+                    activity.name;
+
+                document.getElementById("activityDate").value =
+                    activity.date;
+
+                document.getElementById("activityTime").value =
+                    activity.time;
+
+                document.getElementById("activityLocation").value =
+                    activity.location;
+
+                document.getElementById("activityDescription").value =
+                    activity.description;
+
+            } else {
+
+                document.getElementById("activityDate").value =
+                    selectedDay;
+
+            }
+
+            document.getElementById("activityModal")
+                .classList.add("show");
+
+        }
+
+
+        // Close Modal
+
+        function closeActivityModal() {
+
+            document.getElementById("activityModal")
+                .classList.remove("show");
+
+        }
+
+
+        // Save Activity
+
+        document.getElementById("activityForm")
+            .addEventListener("submit", function (e) {
+
+                e.preventDefault();
+
+                const activity = {
+
+                    id: editingActivityId || Date.now(),
+
+                    name: document.getElementById("activityName")
+                        .value.trim(),
+
+                    date: document.getElementById("activityDate")
+                        .value,
+
+                    time: document.getElementById("activityTime")
+                        .value,
+
+                    location: document.getElementById("activityLocation")
+                        .value.trim(),
+
+                    description: document.getElementById("activityDescription")
+                        .value.trim()
+
+                };
+
+
+                // Validate Date
+
+                if (
+                    activity.date < getLocalDateString(tripStartDate) ||
+                    activity.date > getLocalDateString(tripEndDate)
+                ) {
+
+                    alert("Please select a date within your trip.");
+
+                    return;
+
+                }
+
+
+                // Edit or Add
+
+                if (editingActivityId !== null) {
+
+                    activities = activities.map(item =>
+                        item.id === editingActivityId
+                            ? activity
+                            : item
+                    );
+
+                } else {
+
+                    activities.push(activity);
+
+                }
+
+
+                saveActivities();
+
+                selectedDay = activity.date;
+
+                closeActivityModal();
+
+                updateDaySelection();
+
+                renderActivities();
+
+            });
+
+
+        // Save Activities
+
+        function saveActivities() {
+
+            localStorage.setItem(
+                storageKey,
+                JSON.stringify(activities)
+            );
+
+        }
+
+
+        // Render Activities
+
+        function renderActivities() {
+
+            const container =
+                document.getElementById("activitiesContainer");
+
+            const filtered = activities
+                .filter(item => item.date === selectedDay)
+                .sort((a, b) =>
+                    a.time.localeCompare(b.time)
+                );
+
+            document.getElementById("totalActivities").textContent =
+                activities.length;
+
+
+            if (filtered.length === 0) {
+
+                container.innerHTML = `
+
+                    <div class="empty-state">
+
+                        <h3>No activities planned yet</h3>
+
+                        <p>Add activities for this day.</p>
+
+                        <button class="add-btn"
+                            onclick="openActivityModal()">
+
+                            + Add Activity
+
+                        </button>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            container.innerHTML = filtered.map(item => `
+
+                <div class="activity-card">
+
+                    <div class="activity-time">
+                        ${formatTime(item.time)}
+                    </div>
+
+                    <div class="activity-details">
+
+                        <h3>${escapeHTML(item.name)}</h3>
+
+                        <p>📍 ${escapeHTML(item.location)}</p>
+
+                        <p>${escapeHTML(item.description)}</p>
+
+                    </div>
+
+                    <div class="activity-actions">
+
+                        <button onclick="openActivityModal(${item.id})">
+                            Edit
+                        </button>
+
+                        <button class="delete-btn"
+                            onclick="deleteActivity(${item.id})">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `).join("");
+
+        }
+
+
+        // Escape HTML
+
+        function escapeHTML(value) {
+
+            return String(value).replace(/[&<>"']/g, char => ({
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+
+            })[char]);
+
+        }
+
+
+        // Format Time
+
+        function formatTime(time) {
+
+            const [hour, minute] = time.split(":");
+
+            const date = new Date();
+
+            date.setHours(Number(hour), Number(minute));
+
+            return date.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+
+        }
+
+
+        // Delete Activity
+
+        function deleteActivity(id) {
+
+            if (!confirm(
+                "Are you sure you want to delete this activity?"
+            )) {
+
+                return;
+
+            }
+
+            activities = activities.filter(
+                item => item.id !== id
+            );
+
+            saveActivities();
+
+            renderActivities();
+
+        }
+
+
+        // Update Selected Day
+
+        function updateDaySelection() {
+
+            const buttons =
+                document.querySelectorAll(".day-btn");
+
+            buttons.forEach(button => {
+
+                const dayIndex =
+                    [...buttons].indexOf(button);
+
+                const date = new Date(tripStartDate);
+
+                date.setDate(date.getDate() + dayIndex);
+
+                if (
+                    getLocalDateString(date) === selectedDay
+                ) {
+
+                    selectDay(selectedDay, button);
+
+                }
+
+            });
+
+        }
+
+
+        // Close Modal On Outside Click
+
+        document.getElementById("activityModal")
+            .addEventListener("click", function (e) {
+
+                if (e.target === this) {
+
+                    closeActivityModal();
+
+                }
+
+            });
+
+
+        // Start Application
+
+        initializeItinerary();
+
+    </script>
+
+</body>
+
+</html>
